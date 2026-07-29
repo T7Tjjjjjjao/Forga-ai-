@@ -1,0 +1,733 @@
+/* ============================================================
+   Forga AI - التصميم الرئيسي
+   الألوان: رمادي (#1a1a1a, #2d2d2d, #3d3d3d, #888888)
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #121212;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   الشريط العلوي (Navbar)
+   ============================================================ */
+.navbar {
+    background: #1a1a1a;
+    border-bottom: 1px solid #2d2d2d;
+    padding: 12px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-3d {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff4444, #1a1a1a 70%);
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+    padding: 6px;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff4444, #888888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-email {
+    font-size: 14px;
+    color: #888;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #3d3d3d;
+    color: #ccc;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.btn-outline:hover {
+    background: #2d2d2d;
+    border-color: #ff4444;
+    color: #ff4444;
+}
+
+/* ============================================================
+   نافذة الكود (Overlay)
+   ============================================================ */
+.code-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.code-overlay.active {
+    display: flex;
+}
+
+.code-modal {
+    background: #1e1e1e;
+    border: 1px solid #2d2d2d;
+    border-radius: 20px;
+    padding: 40px 48px;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
+}
+
+.code-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.code-modal-header i {
+    font-size: 28px;
+    color: #ff4444;
+}
+
+.code-modal-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.code-subtitle {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.code-input-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.code-input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #2d2d2d;
+    background: #121212;
+    color: #e0e0e0;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.3s;
+}
+
+.code-input:focus {
+    outline: none;
+    border-color: #ff4444;
+}
+
+.btn-primary {
+    background: #ff4444;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary:hover {
+    background: #cc3333;
+    transform: scale(1.02);
+}
+
+.code-status {
+    margin: 12px 0;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.code-status.success {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+}
+
+.code-status.error {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+}
+
+.code-info {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid #2d2d2d;
+    font-size: 13px;
+    color: #888;
+}
+
+.code-type {
+    font-weight: 600;
+}
+
+.code-type.lifetime { color: #fbbf24; }
+.code-type.monthly { color: #60a5fa; }
+.code-type.yearly { color: #34d399; }
+
+/* ============================================================
+   منطقة المحادثة
+   ============================================================ */
+.chat-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 80px);
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #2d2d2d;
+    margin-bottom: 16px;
+}
+
+.chat-header h1 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.bot-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bot-selector label {
+    font-size: 14px;
+    color: #888;
+}
+
+.bot-select {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #2d2d2d;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+}
+
+.bot-select:focus {
+    outline: none;
+    border-color: #ff4444;
+}
+
+/* ============================================================
+   رسائل المحادثة
+   ============================================================ */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #3d3d3d;
+    border-radius: 4px;
+}
+
+.message {
+    display: flex;
+    gap: 12px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-avatar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avatar-small {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.message-content {
+    background: #1a1a1a;
+    padding: 12px 16px;
+    border-radius: 12px;
+    max-width: 85%;
+    line-height: 1.6;
+    border: 1px solid #2d2d2d;
+}
+
+.message-content p {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.user-message .message-content {
+    background: #2d2d2d;
+    border-color: #3d3d3d;
+}
+
+.user-message {
+    flex-direction: row-reverse;
+}
+
+.user-message .message-avatar {
+    background: #3d3d3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+/* ============================================================
+   منطقة الإدخال
+   ============================================================ */
+.chat-input-area {
+    border-top: 1px solid #2d2d2d;
+    padding-top: 16px;
+    margin-top: 8px;
+}
+
+.input-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 8px 8px 8px 16px;
+    border: 1px solid #2d2d2d;
+    transition: border-color 0.3s;
+}
+
+.input-wrapper:focus-within {
+    border-color: #ff4444;
+}
+
+.input-wrapper textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #e0e0e0;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    resize: none;
+    padding: 8px 0;
+    line-height: 1.5;
+    max-height: 200px;
+}
+
+.input-wrapper textarea:focus {
+    outline: none;
+}
+
+.send-btn {
+    background: #ff4444;
+    border: none;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.send-btn:hover {
+    background: #cc3333;
+    transform: scale(1.05);
+}
+
+.send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.input-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 4px 0;
+    font-size: 12px;
+    color: #666;
+}
+
+.char-count {
+    color: #666;
+}
+
+/* ============================================================
+   صفحة تسجيل الدخول
+   ============================================================ */
+.login-page {
+    background: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+.login-card {
+    background: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-radius: 24px;
+    padding: 48px 40px;
+    text-align: center;
+}
+
+.login-logo {
+    margin-bottom: 32px;
+}
+
+.logo-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff4444, #1a1a1a 70%);
+    box-shadow: 0 0 40px rgba(255, 68, 68, 0.2);
+    padding: 10px;
+}
+
+.login-logo h1 {
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff4444, #888888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 12px;
+}
+
+.login-logo p {
+    color: #888;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 24px 0;
+    color: #888;
+    font-size: 13px;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #2d2d2d;
+}
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #2d2d2d;
+    background: #121212;
+    color: #e0e0e0;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-google:hover {
+    background: #2d2d2d;
+    border-color: #ff4444;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.login-footer {
+    margin-top: 24px;
+    color: #666;
+    font-size: 13px;
+}
+
+.login-footer i {
+    margin-right: 6px;
+    color: #4ade80;
+}
+
+/* ============================================================
+   مكونات إضافية (Like, Dislike, Copy, Regenerate)
+   ============================================================ */
+.message-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.message:hover .message-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    background: transparent;
+    border: none;
+    color: #666;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.action-btn:hover {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.action-btn.liked {
+    color: #4ade80;
+}
+
+.action-btn.disliked {
+    color: #f87171;
+}
+
+.action-btn .count {
+    font-size: 12px;
+    color: #888;
+}
+
+.code-block {
+    background: #0d0d0d;
+    border-radius: 8px;
+    margin: 8px 0;
+    overflow: hidden;
+    border: 1px solid #2d2d2d;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: #1a1a1a;
+    border-bottom: 1px solid #2d2d2d;
+    font-size: 13px;
+    color: #888;
+}
+
+.code-language {
+    font-weight: 600;
+    color: #ff4444;
+}
+
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.copy-btn:hover {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.copy-btn.copied {
+    color: #4ade80;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 14px;
+}
+
+.code-block code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ============================================================
+   مؤشر الكتابة (Typing Indicator)
+   ============================================================ */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #2d2d2d;
+    max-width: 80px;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    background: #888;
+    border-radius: 50%;
+    animation: typingBounce 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-8px); opacity: 1; }
+}
+
+/* ============================================================
+   استجابة للأجهزة المحمولة
+   ============================================================ */
+@media (max-width: 768px) {
+    .chat-container {
+        padding: 12px 16px;
+        height: calc(100vh - 70px);
+    }
+    
+    .nav-container {
+        padding: 0 8px;
+    }
+    
+    .code-modal {
+        padding: 28px 20px;
+    }
+    
+    .code-input-group {
+        flex-direction: column;
+    }
+    
+    .message-content {
+        max-width: 95%;
+    }
+    
+    .chat-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .bot-selector {
+        width: 100%;
+    }
+    
+    .bot-select {
+        flex: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 32px 20px;
+    }
+    
+    .logo-large {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .login-logo h1 {
+        font-size: 26px;
+    }
+}
