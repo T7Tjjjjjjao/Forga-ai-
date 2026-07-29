@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forga AI - محادثات غير مقيدة</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Highlight.js للكود -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/logo.svg" alt="Forga AI" class="logo-3d">
+                <span class="logo-text">Forga AI</span>
+            </div>
+            <div class="nav-controls">
+                <span class="user-email" id="userEmail">user@example.com</span>
+                <button class="btn btn-outline" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- نافذة الكود (Access Code) -->
+    <div class="code-overlay" id="codeOverlay">
+        <div class="code-modal">
+            <div class="code-modal-header">
+                <i class="fas fa-key"></i>
+                <h2>أدخل كود الوصول</h2>
+            </div>
+            <p class="code-subtitle">للوصول إلى المحادثات غير المقيدة، يرجى إدخال كود صالح</p>
+            <div class="code-input-group">
+                <input type="text" id="accessCodeInput" placeholder="مثال: LT-XXXX-YYYY" class="code-input">
+                <button class="btn btn-primary" id="validateCodeBtn">
+                    <i class="fas fa-check"></i> تحقق
+                </button>
+            </div>
+            <div class="code-status" id="codeStatus"></div>
+            <div class="code-info">
+                <span class="code-type" id="codeTypeDisplay">--</span>
+                <span class="code-expiry" id="codeExpiryDisplay">--</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- منطقة المحادثة الرئيسية -->
+    <main class="chat-container">
+        <div class="chat-header">
+            <h1>محادثة غير مقيدة</h1>
+            <div class="bot-selector">
+                <label for="botMode">نوع البوت:</label>
+                <select id="botMode" class="bot-select">
+                    <option value="accurate">🎯 دقيق (Accurate)</option>
+                    <option value="fast">⚡ سريع (Fast)</option>
+                    <option value="detailed">📖 مفصل (Detailed)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- سجل المحادثة -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <img src="assets/logo.svg" alt="Forga AI" class="avatar-small">
+                </div>
+                <div class="message-content">
+                    <p>مرحباً! أنا Forga AI، جاهز للمحادثة بدون قيود. كيف يمكنني مساعدتك اليوم؟</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- منطقة الإدخال -->
+        <div class="chat-input-area">
+            <div class="input-wrapper">
+                <textarea id="userInput" placeholder="اكتب رسالتك هنا..." rows="1"></textarea>
+                <button class="btn btn-primary send-btn" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-footer">
+                <span class="input-info">Forga AI - محادثات غير مقيدة</span>
+                <span class="char-count" id="charCount">0</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/auth.js"></script>
+    <script src="js/code_manager.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui_interactions.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
