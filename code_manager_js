@@ -24,4 +24,212 @@ const CODES_DB = {
     ],
     // أكواد سنوية (Yearly) - تنسيق: YR-CCCC-DDDD
     yearly: [
-        'YR-AAAA
+        'YR-AAAA-9999',
+        'YR-BBBB-8888',
+        'YR-CCCC-7777',
+        'YR-DDDD-6666',
+        'YR-EEEE-5555'
+    ]
+};
+
+// ============================================================
+// 2. دالة تحميل الأكواد من ملفات TXT (محاكاة)
+// ============================================================
+async function loadCodesFromFiles() {
+    // في الإنتاج، يمكن جلب الأكواد من ملفات TXT عبر Fetch API
+    // هذه محاكاة للعرض
+    try {
+        // محاكاة جلب ملفات الأكواد
+        const response = await fetch('/codes/lifetime_codes.txt');
+        if (response.ok) {
+            const text = await response.text();
+            CODES_DB.lifetime = text.split('\n').filter(line => line.trim());
+        }
+    } catch (e) {
+        console.warn('فشل تحميل ملفات الأكواد، استخدام القيم الافتراضية');
+    }
+}
+
+// ============================================================
+// 3. إدارة الأكواد للمستخدم
+// ============================================================
+class CodeManager {
+    constructor() {
+        this.userCode = null;
+        this.codeType = null;
+        this.isValid = false;
+        this._loadSavedCode();
+    }
+
+    _loadSavedCode() {
+        try {
+            const saved = localStorage.getItem('forga_user_code');
+            if (saved) {
+                const data = JSON.parse(saved);
+                this.userCode = data.code;
+                this.codeType = data.type;
+                this.isValid = data.valid || false;
+            }
+        } catch (e) {
+            console.warn('فشل تحميل الكود المحفوظ:', e);
+        }
+    }
+
+    _saveCode(code, type, valid) {
+        this.userCode = code;
+        this.codeType = type;
+        this.isValid = valid;
+        localStorage.setItem('forga_user_code', JSON.stringify({
+            code,
+            type,
+            valid
+        }));
+    }
+
+    validateCode(code) {
+        // التحقق من الكود
+        const trimmedCode = code.trim().toUpperCase();
+        
+        // البحث في جميع الأنواع
+        for (const [type, codes] of Object.entries(CODES_DB)) {
+            if (codes.includes(trimmedCode)) {
+                this._saveCode(trimmedCode, type, true);
+                return { valid: true, type: type };
+            }
+        }
+
+        this._saveCode(trimmedCode, null, false);
+        return { valid: false, type: null };
+    }
+
+    getCode() {
+        return this.userCode;
+    }
+
+    getCodeType() {
+        return this.codeType;
+    }
+
+    hasValidCode() {
+        return this.isValid;
+    }
+
+    clearCode() {
+        this.userCode = null;
+        this.codeType = null;
+        this.isValid = false;
+        localStorage.removeItem('forga_user_code');
+    }
+
+    // الحصول على تاريخ انتهاء الصلاحية (محاكاة)
+    getExpiryDate() {
+        if (!this.isValid || !this.codeType) return null;
+        
+        const now = new Date();
+        switch (this.codeType) {
+            case 'lifetime':
+                return 'مدى الحياة';
+            case 'monthly':
+                const monthly = new Date(now);
+                monthly.setMonth(monthly.getMonth() + 1);
+                return monthly.toLocaleDateString('ar-EG');
+            case 'yearly':
+                const yearly = new Date(now);
+                yearly.setFullYear(yearly.getFullYear() + 1);
+                return yearly.toLocaleDateString('ar-EG');
+            default:
+                return 'غير معروف';
+        }
+    }
+}
+
+// ============================================================
+// 4. تهيئة مدير الأكواد وربطه بالواجهة
+// ============================================================
+const codeManager = new CodeManager();
+
+// تحميل الأكواد من الملفات (اختياري)
+loadCodesFromFiles();
+
+// التحكم في نافذة الكود
+document.addEventListener('DOMContentLoaded', () => {
+    const codeOverlay = document.getElementById('codeOverlay');
+    const codeInput = document.getElementById('accessCodeInput');
+    const validateBtn = document.getElementById('validateCodeBtn');
+    const codeStatus = document.getElementById('codeStatus');
+    const codeTypeDisplay = document.getElementById('codeTypeDisplay');
+    const codeExpiryDisplay = document.getElementById('codeExpiryDisplay');
+
+    // إذا كان المستخدم مسجل الدخول وليس لديه كود صالح، عرض النافذة
+    if (auth.isLoggedIn() && !codeManager.hasValidCode()) {
+        codeOverlay.classList.add('active');
+    }
+
+    // التحقق من الكود
+    validateBtn.addEventListener('click', () => {
+        const code = codeInput.value.trim();
+        if (!code) {
+            codeStatus.className = 'code-status error';
+            codeStatus.textContent = '⚠️ يرجى إدخال كود الوصول';
+            return;
+        }
+
+        const result = codeManager.validateCode(code);
+        if (result.valid) {
+            codeStatus.className = 'code-status success';
+            codeStatus.textContent = '✅ كود صالح! مرحباً بك في Forga AI';
+            
+            // عرض نوع الكود
+            const typeNames = {
+                lifetime: '🌟 مدى الحياة',
+                monthly: '📅 شهري',
+                yearly: '📆 سنوي'
+            };
+            codeTypeDisplay.textContent = `نوع الكود: ${typeNames[result.type] || result.type}`;
+            codeTypeDisplay.className = `code-type ${result.type}`;
+            codeExpiryDisplay.textContent = `التاريخ: ${codeManager.getExpiryDate()}`;
+            
+            // إخفاء النافذة بعد تأخير
+            setTimeout(() => {
+                codeOverlay.classList.remove('active');
+            }, 1000);
+        } else {
+            codeStatus.className = 'code-status error';
+            codeStatus.textContent = '❌ كود غير صالح. يرجى التحقق والمحاولة مرة أخرى';
+            codeTypeDisplay.textContent = '';
+            codeExpiryDisplay.textContent = '';
+        }
+    });
+
+    // السماح بالضغط على Enter
+    codeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            validateBtn.click();
+        }
+    });
+
+    // إذا كان المستخدم لديه كود صالح، إخفاء النافذة
+    if (codeManager.hasValidCode()) {
+        codeOverlay.classList.remove('active');
+    }
+
+    // منع إرسال الرسائل بدون كود صالح
+    const sendBtn = document.getElementById('sendBtn');
+    const userInput = document.getElementById('userInput');
+    
+    if (sendBtn && userInput) {
+        const originalSend = sendBtn.click;
+        sendBtn.addEventListener('click', (e) => {
+            if (!codeManager.hasValidCode()) {
+                e.preventDefault();
+                codeOverlay.classList.add('active');
+                codeStatus.className = 'code-status error';
+                codeStatus.textContent = '⚠️ يرجى إدخال كود صالح أولاً';
+                return;
+            }
+        });
+    }
+});
+
+// تصدير المدير للاستخدام في ملفات أخرى
+window.codeManager = codeManager;
